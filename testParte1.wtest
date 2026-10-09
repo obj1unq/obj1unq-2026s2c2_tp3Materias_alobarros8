@@ -1,0 +1,68 @@
+import materias.*
+
+describe "Inscripción a carreras" {
+  const programacion = new Carrera(nombre = "Programación")
+  const tuess = new Carrera(nombre = "Tecnicatura en Economía Social y Solidaria")
+  const terapiaOcupacional = new Carrera(nombre = "Terapia Ocupacional")
+
+  const basesDeDatos = new Materia(nombre = "Bases de Datos")
+  const elementosProgramacionLogica = new Materia(nombre = "Elementos de Programación y lógica")
+  const objetos1 = new Materia(nombre = "Objetos 1")
+  const objetos2 = new Materia(nombre = "Objetos 2")
+  const objetos3 = new Materia(nombre = "Objetos 3")
+  const matematica1 = new Materia(nombre = "Matemática 1")
+  const programacionConcurrente = new Materia(nombre = "Programación Concurrente")
+
+  const matematicasEconomiaAdministracion = new Materia(nombre = "Matemáticas para economía y administración")
+  const trabajoYSociedad = new Materia(nombre = "Trabajo y sociedad")
+  const economia = new Materia(nombre = "Economía")
+  const desarrolloLocal = new Materia(nombre = "Desarrollo local")
+
+  const lecturaEscrituraAcademica = new Materia(nombre = "Lectura y escritura académica")
+  const cienciasSalud = new Materia(nombre = "Ciencias de la Salud")
+  const psicologia = new Materia(nombre = "Psicología")
+  const antropologia = new Materia(nombre = "Antropología")
+  const sociologia = new Materia(nombre = "Sociología")
+
+  const estudiante = new Estudiante(nombre = "Alex")
+
+  method initialize() {
+    programacion.agregarMateria(elementosProgramacionLogica)
+    programacion.agregarMateria(matematica1)
+    programacion.agregarMateria(objetos1)
+    programacion.agregarMateria(objetos2)
+    programacion.agregarMateria(objetos3)
+    programacion.agregarMateria(basesDeDatos)
+    programacion.agregarMateria(programacionConcurrente)
+
+    tuess.agregarMateria(matematicasEconomiaAdministracion)
+    tuess.agregarMateria(trabajoYSociedad)
+    tuess.agregarMateria(economia)
+    tuess.agregarMateria(desarrolloLocal)
+
+    terapiaOcupacional.agregarMateria(lecturaEscrituraAcademica)
+    terapiaOcupacional.agregarMateria(cienciasSalud)
+    terapiaOcupacional.agregarMateria(psicologia)
+    terapiaOcupacional.agregarMateria(antropologia)
+    terapiaOcupacional.agregarMateria(sociologia)
+
+    estudiante.inscribirEn(programacion)
+    estudiante.inscribirEn(tuess)
+  }
+
+  test "Alex conoce las carreras en las que está inscripta" {
+    assert.equals(#{programacion, tuess}, estudiante.carreras())
+    assert.that(estudiante.estaInscriptaEn(programacion))
+    assert.that(estudiante.estaInscriptaEn(tuess))
+    assert.notThat(estudiante.estaInscriptaEn(terapiaOcupacional))
+  }
+
+  test "Alex puede consultar si una materia pertenece a sus carreras" {
+    assert.that(estudiante.tieneMateriaEnAlgunaCarrera(basesDeDatos))
+    assert.notThat(estudiante.tieneMateriaEnAlgunaCarrera(psicologia))
+  }
+
+  test "no se puede inscribir dos veces a la misma carrera" {
+    assert.throwsException({ estudiante.inscribirEn(programacion) })
+  }
+}
