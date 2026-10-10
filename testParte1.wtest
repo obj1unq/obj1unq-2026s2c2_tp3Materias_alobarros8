@@ -1,5 +1,6 @@
 import materias.*
-
+import carrera.*
+import estudiante.*
 describe "Inscripción a carreras" {
   const programacion = new Carrera(nombre = "Programación")
   const tuess = new Carrera(nombre = "Tecnicatura en Economía Social y Solidaria")
