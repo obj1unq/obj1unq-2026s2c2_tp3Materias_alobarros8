@@ -1,0 +1,68 @@
+import materias.*
+import carrera.*
+import estudiante.*
+
+describe "Inscripciones a las materias" {
+  const programacion = new Carrera(nombre = "Programación")
+  const terapiaOcupacional = new Carrera(nombre = "Terapia Ocupacional")
+
+  const mate1 = new Materia(nombre = "Matemática 1")
+  const obj1 = new Materia(nombre = "Objetos 1")
+  const bd = new Materia(nombre = "Bases de Datos")
+  const obj2 = new Materia(nombre = "Objetos 2")
+  const redes = new Materia(nombre = "Redes")
+  const psicologia = new Materia(nombre = "Psicología")
+
+  const alex = new Estudiante(nombre = "Alex")
+  const roque = new Estudiante(nombre = "Roque")
+
+  method initialize() {
+    programacion.agregarMateria(mate1)
+    programacion.agregarMateria(obj1)
+    programacion.agregarMateria(obj2)
+    programacion.agregarMateria(bd)
+    programacion.agregarMateria(redes)
+    terapiaOcupacional.agregarMateria(psicologia)
+
+    obj2.configurarRequisitos(#{obj1, mate1})
+    redes.configurarRequisitos(#{obj1})
+
+    alex.inscribirEn(programacion)
+    alex.registrarCursada(mate1, 10)
+    alex.registrarCursada(obj1, 10)
+
+    roque.inscribirEn(programacion)
+  }
+
+  test "Alex puede inscribirse a Objetos 2" {
+    assert.that(alex.puedeInscribirseA(obj2))
+  }
+
+  test "inscribe a Alex en Objetos 2" {
+    alex.inscribirseA(obj2)
+
+    assert.equals(#{alex}, obj2.inscriptos())
+  }
+
+  test "rechaza una segunda inscripción a Objetos 2" {
+    alex.inscribirseA(obj2)
+
+    assert.throwsException({ alex.inscribirseA(obj2) })
+  }
+
+  test "rechaza inscribir una materia ya aprobada" {
+    assert.throwsException({ alex.inscribirseA(obj1) })
+  }
+
+  test "rechaza inscribir una materia de una carrera no inscripta" {
+    assert.throwsException({ alex.inscribirseA(psicologia) })
+  }
+
+  test "rechaza inscribir si faltan materias correlativas aprobadas" {
+    assert.throwsException({ roque.inscribirseA(obj2) })
+  }
+
+  test "consulta las materias habilitadas en una carrera" {
+    assert.equals(#{bd, obj2, redes}, programacion.materiasHabilitadasPara(alex))
+  }
+}

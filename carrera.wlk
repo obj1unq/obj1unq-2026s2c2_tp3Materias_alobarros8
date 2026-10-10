@@ -10,4 +10,7 @@ class Carrera {
   method tieneMateria(materia) = materias.contains(materia)
 
   method materias() = materias
+
+  method materiasHabilitadasPara(estudiante) =
+    materias.filter({ materia => estudiante.puedeInscribirseA(materia) })
 }

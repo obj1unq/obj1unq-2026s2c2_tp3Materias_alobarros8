@@ -23,6 +23,13 @@ class Estudiante {
   method tieneMateriaEnAlgunaCarrera(materia) =
     carreras.any({ carrera => carrera.tieneMateria(materia) })
 
+  method puedeInscribirseA(materia) =
+    materia.puedeInscribirse(self)
+
+  method inscribirseA(materia) {
+    materia.inscribir(self)
+  }
+
   method registrarCursada(materia, nota) {
     self.validarNota(nota)
     self.validarMateriaNoAprobada(materia)
