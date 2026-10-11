@@ -5,6 +5,7 @@ class Carrera {
 
   method agregarMateria(materia) {
     materias.add(materia)
+    materia.asignarCarrera(self)
   }
 
   method tieneMateria(materia) = materias.contains(materia)
@@ -13,4 +14,7 @@ class Carrera {
 
   method materiasHabilitadasPara(estudiante) =
     materias.filter({ materia => estudiante.puedeInscribirseA(materia) })
+
+  method materiasDelAnio(anio) =
+    materias.filter({ materia => materia.anio() == anio })
 }
