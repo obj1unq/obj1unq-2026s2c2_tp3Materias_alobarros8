@@ -45,11 +45,9 @@ class Materia {
   method inscriptos() = inscriptos
 
   method configurarRequisitos(nuevosRequisitos) {
-    if (nuevosRequisitos.className().contains("Set")) {
-      requisitos = new Correlativas(requisitos = nuevosRequisitos)
-    } else {
+    
       requisitos = nuevosRequisitos
-    }
+    
   }
 
   method puedeInscribirse(estudiante) =
