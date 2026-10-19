@@ -105,4 +105,6 @@ class Cursada {
   method nota() = nota
 
   method estaAprobada() = nota >= 6
+
+  method creditosDeMateria() = materia.creditos()
 }

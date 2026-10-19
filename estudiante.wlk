@@ -32,7 +32,7 @@ class Estudiante {
 
   method creditosAprobadosEn(carrera) =
     self.cursadasAprobadas().filter({ cursada => carrera.tieneMateria(cursada.materia()) })
-      .sum({ cursada => cursada.materia().creditos() })
+      .sum({ cursada => cursada.creditosDeMateria() })
 
   //method aproboAnioCompleto(carrera, anio) =
     //carrera.materiasDelAnio(anio).all({ materia => self.tieneAprobada(materia) })
