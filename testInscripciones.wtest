@@ -24,8 +24,8 @@ describe "Inscripciones a las materias" {
     programacion.agregarMateria(redes)
     terapiaOcupacional.agregarMateria(psicologia)
 
-    obj2.configurarRequisitos(#{obj1, mate1})
-    redes.configurarRequisitos(#{obj1})
+    obj2.configurarRequisitos(new Correlativas(requisitos = #{obj1, mate1}))
+    redes.configurarRequisitos(new Correlativas(requisitos = #{obj1}))
 
     alex.inscribirEn(programacion)
     alex.registrarCursada(mate1, 10)

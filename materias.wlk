@@ -1,31 +1,47 @@
 
 class SinRequisitos {
-  method cumple(materia, estudiante) = true
+  method cumple(estudiante) = true
+
+  method asignarCarrera(carrera) {}
 }
 
 object sinRequisitos {
-  method cumple(materia, estudiante) = true
+  method cumple(estudiante) = true
+
+  method asignarCarrera(carrera) {}
 }
 
 class Correlativas {
   const requisitos = #{}
 
-  method cumple(materia, estudiante) =
+  method cumple(estudiante) =
     requisitos.all({ requisito => estudiante.tieneAprobada(requisito) })
+
+  method asignarCarrera(carrera) {}
 }
 
 class RequisitoPorCreditos {
   const creditosNecesarios
+  var carrera = null
 
-  method cumple(materia, estudiante) =
-    estudiante.creditosAprobadosEn(materia.carrera()) >= creditosNecesarios
+  method cumple(estudiante) =
+    estudiante.creditosAprobadosEn(carrera) >= creditosNecesarios
+
+  method asignarCarrera(unaCarrera) {
+    carrera = unaCarrera
+  }
 }
 
 class RequisitoPorAnio {
   const anioNecesario
+  var carrera = null
 
-  method cumple(materia, estudiante) =
-    materia.carrera().aproboAnioCompleto(estudiante, anioNecesario)
+  method cumple(estudiante) =
+    carrera.aproboAnioCompleto(estudiante, anioNecesario)
+
+  method asignarCarrera(unaCarrera) {
+    carrera = unaCarrera
+  }
 }
 
 class Materia {
@@ -42,14 +58,14 @@ class Materia {
 
   method asignarCarrera(unaCarrera) {
     carrera = unaCarrera
+    requisitos.asignarCarrera(unaCarrera)
   }
 
   method inscriptos() = inscriptos
 
   method configurarRequisitos(nuevosRequisitos) {
-    
-      requisitos = nuevosRequisitos
-    
+    requisitos = nuevosRequisitos
+    requisitos.asignarCarrera(carrera)
   }
 
   method puedeInscribirse(estudiante) =
@@ -87,13 +103,7 @@ class Materia {
   method noEstaInscripto(estudiante) =
     !inscriptos.contains(estudiante)
 
-  method cumpleRequisitos(estudiante) {
-    if (requisitos == sinRequisitos) return true
-    if (requisitos.className().contains("Set")) {
-      return requisitos.all({ requisito => estudiante.tieneAprobada(requisito) })
-    }
-    return requisitos.cumple(self, estudiante)
-  }
+  method cumpleRequisitos(estudiante) = requisitos.cumple(estudiante)
 }
 
 class Cursada {
