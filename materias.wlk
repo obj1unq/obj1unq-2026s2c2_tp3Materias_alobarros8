@@ -36,6 +36,8 @@ class Materia {
   var property anio = 0
   var carrera = null
 
+  method nombre() = nombre
+
   method carrera() = carrera
 
   method asignarCarrera(unaCarrera) {

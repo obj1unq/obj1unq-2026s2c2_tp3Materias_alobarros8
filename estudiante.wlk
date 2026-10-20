@@ -63,7 +63,7 @@ class Estudiante {
     self.cursadasDe(materia).any({ cursada => cursada.estaAprobada() })
 
   method cursadasDe(materia) =
-    cursadas.filter({ cursada => cursada.materia() == materia })
+    cursadas.filter({ cursada => cursada.materia().nombre() == materia.nombre() })
 
   method cursadasAprobadas() =
     cursadas.filter({ cursada => cursada.estaAprobada() })

@@ -73,4 +73,10 @@ describe "Historia académica" {
   test "conserva el orden de las cursadas de una materia" {
     assert.equals([2, 8], alex.cursadasDe(mate1).map({ cursada => cursada.nota() }))
   }
+
+  test "busca cursadas por nombre de materia y no por identidad del objeto" {
+    const otraMate1 = new Materia(nombre = "Matemática 1")
+
+    assert.equals([2, 8], alex.cursadasDe(otraMate1).map({ cursada => cursada.nota() }))
+  }
 }
