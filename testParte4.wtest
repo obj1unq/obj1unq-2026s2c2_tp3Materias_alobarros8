@@ -1,0 +1,73 @@
+import materias.*
+import carrera.*
+import estudiante.*
+
+describe "Requisitos de la materia" {
+  const programacion = new Carrera(nombre = "Programación")
+  const terapiaOcupacional = new Carrera(nombre = "Terapia Ocupacional")
+
+  const obj1 = new Materia(nombre = "Objetos 1", creditos = 8, anio = 1)
+  const mate1 = new Materia(nombre = "Matemática 1", creditos = 8, anio = 1)
+  const bd = new Materia(nombre = "Bases de Datos", creditos = 8, anio = 1)
+
+  const lea = new Materia(nombre = "Lectura y escritura académica", creditos = 8, anio = 1, requisitos = new SinRequisitos())
+  const cienciasDeLaSalud = new Materia(nombre = "Ciencias de la Salud", creditos = 8, anio = 1, requisitos = new SinRequisitos())
+  const psicologia = new Materia(nombre = "Psicología", creditos = 4, anio = 2, requisitos = new RequisitoPorAnio(anioNecesario = 1))
+  const antropologia = new Materia(nombre = "Antropología", creditos = 4, anio = 2, requisitos = new RequisitoPorCreditos(creditosNecesarios = 8))
+  const sociologia = new Materia(nombre = "Sociología", creditos = 8, anio = 3, requisitos = new RequisitoPorCreditos(creditosNecesarios = 10))
+
+  const andy = new Estudiante(nombre = "Andy")
+
+  method initialize() {
+    programacion.agregarMateria(obj1)
+    programacion.agregarMateria(mate1)
+    programacion.agregarMateria(bd)
+
+    terapiaOcupacional.agregarMateria(lea)
+    terapiaOcupacional.agregarMateria(cienciasDeLaSalud)
+    terapiaOcupacional.agregarMateria(psicologia)
+    terapiaOcupacional.agregarMateria(antropologia)
+    terapiaOcupacional.agregarMateria(sociologia)
+
+    andy.inscribirEn(programacion)
+    andy.inscribirEn(terapiaOcupacional)
+    andy.registrarCursada(obj1, 10)
+    andy.registrarCursada(mate1, 10)
+  }
+
+  test "las únicas materias habilitadas en TO son LEA y Ciencias de la Salud" {
+    assert.equals(#{lea, cienciasDeLaSalud}, terapiaOcupacional.materiasHabilitadasPara(andy))
+  }
+
+  test "después de LEA, las materias habilitadas son Ciencias de la Salud y Antropología" {
+    andy.registrarCursada(lea, 10)
+
+    assert.equals(#{cienciasDeLaSalud, antropologia}, terapiaOcupacional.materiasHabilitadasPara(andy))
+  }
+
+  test "después de Antropología, las materias habilitadas son Ciencias de la Salud y Sociología" {
+    andy.registrarCursada(lea, 10)
+    andy.registrarCursada(antropologia, 10)
+
+    assert.equals(#{cienciasDeLaSalud, sociologia}, terapiaOcupacional.materiasHabilitadasPara(andy))
+  }
+
+  test "después de Ciencias de la Salud, las materias habilitadas son Psicología y Sociología" {
+    andy.registrarCursada(lea, 10)
+    andy.registrarCursada(antropologia, 10)
+    andy.registrarCursada(cienciasDeLaSalud, 10)
+
+    assert.equals(#{psicologia, sociologia}, terapiaOcupacional.materiasHabilitadasPara(andy))
+  }
+
+  test "Andy puede inscribirse a Psicología y Sociología" {
+    andy.registrarCursada(lea, 10)
+    andy.registrarCursada(antropologia, 10)
+    andy.registrarCursada(cienciasDeLaSalud, 10)
+    andy.inscribirseA(psicologia)
+    andy.inscribirseA(sociologia)
+
+    assert.equals(#{andy}, psicologia.inscriptos())
+    assert.equals(#{andy}, sociologia.inscriptos())
+  }
+}

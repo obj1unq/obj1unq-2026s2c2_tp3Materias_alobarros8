@@ -1,0 +1,82 @@
+import materias.*
+import carrera.*
+import estudiante.*
+describe "Historia académica" {
+  const programacion = new Carrera(nombre = "Programación")
+  const tuess = new Carrera(nombre = "TUESS")
+  const terapiaOcupacional = new Carrera(nombre = "Terapia Ocupacional")
+
+  const mate1 = new Materia(nombre = "Matemática 1")
+  const obj1 = new Materia(nombre = "Objetos 1")
+  const bd = new Materia(nombre = "Bases de Datos")
+  const economia = new Materia(nombre = "Economía")
+  const tys = new Materia(nombre = "Trabajo y Sociedad")
+  const psicologia = new Materia(nombre = "Psicología")
+
+  const alex = new Estudiante(nombre = "Alex")
+
+  method initialize() {
+    programacion.agregarMateria(mate1)
+    programacion.agregarMateria(obj1)
+    programacion.agregarMateria(bd)
+    tuess.agregarMateria(economia)
+    tuess.agregarMateria(tys)
+    terapiaOcupacional.agregarMateria(psicologia)
+
+    alex.inscribirEn(programacion)
+    alex.inscribirEn(tuess)
+
+    alex.registrarCursada(mate1, 2)
+    alex.registrarCursada(obj1, 10)
+    alex.registrarCursada(economia, 6)
+    alex.registrarCursada(tys, 8)
+    alex.registrarCursada(mate1, 8)
+    alex.registrarCursada(bd, 2)
+  }
+
+  test "no registra una materia que ya está aprobada" {
+    assert.throwsException({ alex.registrarCursada(mate1, 7) })
+  }
+
+  test "no registra una nota fuera del rango permitido" {
+    assert.throwsException({ alex.registrarCursada(bd, 12) })
+  }
+
+  test "consulta las materias aprobadas" {
+    assert.that(alex.tieneAprobada(mate1))
+    assert.notThat(alex.tieneAprobada(bd))
+  }
+
+  test "calcula cantidad y promedio de aprobadas en Programación" {
+    assert.equals(2, alex.cantidadAprobadasEn(programacion))
+    assert.equals(9, alex.promedioEn(programacion))
+  }
+
+  test "calcula el promedio de aprobadas en TUESS" {
+    assert.equals(7, alex.promedioEn(tuess))
+  }
+
+  test "no consulta el promedio de una carrera en la que no está inscripta" {
+    assert.throwsException({ alex.promedioEn(terapiaOcupacional) })
+  }
+
+  test "no consulta el promedio si no tiene aprobadas en la carrera" {
+    alex.inscribirEn(terapiaOcupacional)
+    assert.throwsException({ alex.promedioEn(terapiaOcupacional) })
+  }
+
+  test "calcula cantidad y promedio general de aprobadas" {
+    assert.equals(4, alex.cantidadAprobadas())
+    assert.equals(8, alex.promedioGeneral())
+  }
+
+  test "conserva el orden de las cursadas de una materia" {
+    assert.equals([2, 8], alex.cursadasDe(mate1).map({ cursada => cursada.nota() }))
+  }
+
+  test "busca cursadas por nombre de materia y no por identidad del objeto" {
+    const otraMate1 = new Materia(nombre = "Matemática 1")
+
+    assert.equals([2, 8], alex.cursadasDe(otraMate1).map({ cursada => cursada.nota() }))
+  }
+}

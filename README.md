@@ -1,5 +1,5 @@
 # Inscripción a materias
-
+                      
 En una Universidad de un país latinoamericano se necesita un sistema que permita realizar la inscripción a materias. En esta universidad se tiene un único curso de cada materia y sólo se maneja información de un cuatrimestre (no se consideran inscripciones anteriores). En cambio, sí se debe conocer el historial de materias aprobadas de una persona estudiante, junto con la nota que obtuvo.
 
 ## Parte 1 Inscripción a carreras
@@ -275,6 +275,8 @@ Incorpora al modelo la capacidad de configurar diferentes _estrategias para gest
 - Por orden de llegada: si te querés inscribir y no hay lugar vas a la lista de espera por llegar último
 - Elitista: entran los que tengan mejor promedio.
 - Por grado de avance: Inscribimos al estudiante con mayor cantidad de créditos de la carrera.
+
+La estrategia se configura por materia con `configurarEstrategiaListaEspera`. Si no se configura, se usa el orden de llegada. Se puede elegir `new PorOrdenDeLlegada()`, `new Elitista()` o `new PorGradoDeAvance()`.
 
 
 ### Casos de prueba 
