@@ -44,11 +44,26 @@ class RequisitoPorAnio {
   }
 }
 
+class PorOrdenDeLlegada {
+  method siguienteEstudiante(estudiantes, carrera) = estudiantes.first()
+}
+
+class Elitista {
+  method siguienteEstudiante(estudiantes, carrera) =
+    estudiantes.max({ estudiante => estudiante.promedioGeneral() })
+}
+
+class PorGradoDeAvance {
+  method siguienteEstudiante(estudiantes, carrera) =
+    estudiantes.max({ estudiante => estudiante.creditosAprobadosEn(carrera) })
+}
+
 class Materia {
   const nombre
   const inscriptos = #{}
   const listaEspera = []
   var property requisitos = sinRequisitos
+  var property estrategiaListaEspera = new PorOrdenDeLlegada()
   var property creditos = 0
   var property anio = 0
   var property cupo = 30
@@ -72,6 +87,10 @@ class Materia {
     requisitos.asignarCarrera(carrera)
   }
 
+  method configurarEstrategiaListaEspera(nuevaEstrategia) {
+    estrategiaListaEspera = nuevaEstrategia
+  }
+
   method puedeInscribirse(estudiante) =
     self.perteneceAUnaCarreraDelEstudiante(estudiante) &&
       self.noFueAprobadaPor(estudiante) &&
@@ -93,7 +112,8 @@ class Materia {
     }
     inscriptos.remove(estudiante)
     if (!listaEspera.isEmpty()) {
-      const siguienteEstudiante = listaEspera.first()
+      const siguienteEstudiante =
+        estrategiaListaEspera.siguienteEstudiante(listaEspera, carrera)
       listaEspera.remove(siguienteEstudiante)
       inscriptos.add(siguienteEstudiante)
     }

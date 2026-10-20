@@ -276,6 +276,8 @@ Incorpora al modelo la capacidad de configurar diferentes _estrategias para gest
 - Elitista: entran los que tengan mejor promedio.
 - Por grado de avance: Inscribimos al estudiante con mayor cantidad de créditos de la carrera.
 
+La estrategia se configura por materia con `configurarEstrategiaListaEspera`. Si no se configura, se usa el orden de llegada. Se puede elegir `new PorOrdenDeLlegada()`, `new Elitista()` o `new PorGradoDeAvance()`.
+
 
 ### Casos de prueba 
     - si obj2 tiene configurado "orden de llegada", se comporta como en el punto anterior

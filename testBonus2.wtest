@@ -1,0 +1,74 @@
+import materias.*
+import carrera.*
+import estudiante.*
+
+describe "Bonus 2 - Estrategias para la lista de espera" {
+  const programacion = new Carrera(nombre = "Programación")
+  const mate1 = new Materia(nombre = "Matemática 1")
+  const obj1 = new Materia(nombre = "Objetos 1")
+  const epl = new Materia(nombre = "Elementos de Programación y lógica")
+  const obj2 = new Materia(nombre = "Objetos 2")
+
+  const alex = new Estudiante(nombre = "Alex")
+  const andy = new Estudiante(nombre = "Andy")
+  const luisa = new Estudiante(nombre = "Luisa")
+  const romina = new Estudiante(nombre = "Romina")
+  const alicia = new Estudiante(nombre = "Alicia")
+
+  method initialize() {
+    programacion.agregarMateria(mate1)
+    programacion.agregarMateria(obj1)
+    programacion.agregarMateria(epl)
+    programacion.agregarMateria(obj2)
+
+    obj2.cupo(2)
+    obj2.configurarRequisitos(new Correlativas(requisitos = #{obj1, mate1}))
+    epl.creditos(8)
+
+    alex.inscribirEn(programacion)
+    andy.inscribirEn(programacion)
+    luisa.inscribirEn(programacion)
+    romina.inscribirEn(programacion)
+    alicia.inscribirEn(programacion)
+
+    alex.registrarCursada(mate1, 8)
+    alex.registrarCursada(obj1, 10)
+    andy.registrarCursada(mate1, 10)
+    andy.registrarCursada(obj1, 10)
+    luisa.registrarCursada(mate1, 7)
+    luisa.registrarCursada(obj1, 8)
+    romina.registrarCursada(mate1, 6)
+    romina.registrarCursada(obj1, 6)
+    alicia.registrarCursada(mate1, 9)
+    alicia.registrarCursada(obj1, 10)
+    alicia.registrarCursada(epl, 6)
+  }
+
+  test "la estrategia elitista promueve a quien tiene mejor promedio" {
+    obj2.configurarEstrategiaListaEspera(new Elitista())
+    alex.inscribirseA(obj2)
+    luisa.inscribirseA(obj2)
+    romina.inscribirseA(obj2)
+    andy.inscribirseA(obj2)
+    alicia.inscribirseA(obj2)
+
+    luisa.darseDeBajaDe(obj2)
+
+    assert.equals(#{alex, andy}, obj2.inscriptos())
+    assert.equals([romina, alicia], obj2.listaEspera())
+  }
+
+  test "la estrategia por avance promueve a quien tiene más créditos aprobados" {
+    obj2.configurarEstrategiaListaEspera(new PorGradoDeAvance())
+    alex.inscribirseA(obj2)
+    luisa.inscribirseA(obj2)
+    romina.inscribirseA(obj2)
+    andy.inscribirseA(obj2)
+    alicia.inscribirseA(obj2)
+
+    luisa.darseDeBajaDe(obj2)
+
+    assert.equals(#{alex, alicia}, obj2.inscriptos())
+    assert.equals([romina, andy], obj2.listaEspera())
+  }
+}
