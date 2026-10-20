@@ -18,7 +18,6 @@ class Carrera {
   method materiasDelAnio(anio) =
     materias.filter({ materia => materia.anio() == anio })
 
-  method aproboAnioCompleto(estudiante, anio){
+  method aproboAnioCompleto(estudiante, anio) =
     self.materiasDelAnio(anio).all({ materia => estudiante.tieneAprobada(materia) })
-  }
 }

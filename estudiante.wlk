@@ -34,9 +34,6 @@ class Estudiante {
     self.cursadasAprobadas().filter({ cursada => carrera.tieneMateria(cursada.materia()) })
       .sum({ cursada => cursada.creditosDeMateria() })
 
-  //method aproboAnioCompleto(carrera, anio) =
-    //carrera.materiasDelAnio(anio).all({ materia => self.tieneAprobada(materia) })
-
   method registrarCursada(materia, nota) {
     self.validarNota(nota)
     self.validarMateriaNoAprobada(materia)

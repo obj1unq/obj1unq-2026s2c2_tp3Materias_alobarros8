@@ -25,7 +25,7 @@ class RequisitoPorAnio {
   const anioNecesario
 
   method cumple(materia, estudiante) =
-    estudiante.aproboAnioCompleto(materia.carrera(), anioNecesario)
+    materia.carrera().aproboAnioCompleto(estudiante, anioNecesario)
 }
 
 class Materia {
