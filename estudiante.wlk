@@ -30,6 +30,18 @@ class Estudiante {
     materia.inscribir(self)
   }
 
+  method darseDeBajaDe(materia) {
+    materia.darDeBaja(self)
+  }
+
+  method materiasInscripto() =
+    carreras.flatMap({ carrera => carrera.materias() })
+      .filter({ materia => materia.inscriptos().contains(self) })
+
+  method materiasEnListaDeEspera() =
+    carreras.flatMap({ carrera => carrera.materias() })
+      .filter({ materia => materia.listaEspera().contains(self) })
+
   method creditosAprobadosEn(carrera) =
     self.cursadasAprobadas().filter({ cursada => carrera.tieneMateria(cursada.materia()) })
       .sum({ cursada => cursada.creditosDeMateria() })

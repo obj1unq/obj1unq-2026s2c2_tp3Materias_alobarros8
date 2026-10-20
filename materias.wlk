@@ -47,9 +47,11 @@ class RequisitoPorAnio {
 class Materia {
   const nombre
   const inscriptos = #{}
+  const listaEspera = []
   var property requisitos = sinRequisitos
   var property creditos = 0
   var property anio = 0
+  var property cupo = 30
   var carrera = null
 
   method nombre() = nombre
@@ -62,6 +64,8 @@ class Materia {
   }
 
   method inscriptos() = inscriptos
+
+  method listaEspera() = listaEspera
 
   method configurarRequisitos(nuevosRequisitos) {
     requisitos = nuevosRequisitos
@@ -76,7 +80,23 @@ class Materia {
 
   method inscribir(estudiante) {
     self.validarInscripcion(estudiante)
-    inscriptos.add(estudiante)
+    if (inscriptos.size() < cupo) {
+      inscriptos.add(estudiante)
+    } else {
+      listaEspera.add(estudiante)
+    }
+  }
+
+  method darDeBaja(estudiante) {
+    if (!inscriptos.contains(estudiante)) {
+      self.error("El estudiante no está inscripto en esta materia")
+    }
+    inscriptos.remove(estudiante)
+    if (!listaEspera.isEmpty()) {
+      const siguienteEstudiante = listaEspera.first()
+      listaEspera.remove(siguienteEstudiante)
+      inscriptos.add(siguienteEstudiante)
+    }
   }
 
   method validarInscripcion(estudiante) {
@@ -101,7 +121,7 @@ class Materia {
     !estudiante.tieneAprobada(self)
 
   method noEstaInscripto(estudiante) =
-    !inscriptos.contains(estudiante)
+    !inscriptos.contains(estudiante) && !listaEspera.contains(estudiante)
 
   method cumpleRequisitos(estudiante) = requisitos.cumple(estudiante)
 }

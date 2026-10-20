@@ -1,0 +1,90 @@
+import materias.*
+import carrera.*
+import estudiante.*
+
+describe "Bonus 1 - Listas de espera" {
+  const programacion = new Carrera(nombre = "Programación")
+  const mate1 = new Materia(nombre = "Matemática 1")
+  const obj1 = new Materia(nombre = "Objetos 1")
+  const epl = new Materia(nombre = "Elementos de Programación y lógica")
+  const obj2 = new Materia(nombre = "Objetos 2")
+
+  const alex = new Estudiante(nombre = "Alex")
+  const andy = new Estudiante(nombre = "Andy")
+  const luisa = new Estudiante(nombre = "Luisa")
+  const romina = new Estudiante(nombre = "Romina")
+  const alicia = new Estudiante(nombre = "Alicia")
+  const ana = new Estudiante(nombre = "Ana")
+
+  method initialize() {
+    programacion.agregarMateria(mate1)
+    programacion.agregarMateria(obj1)
+    programacion.agregarMateria(epl)
+    programacion.agregarMateria(obj2)
+
+    obj2.cupo(2)
+    obj2.configurarRequisitos(new Correlativas(requisitos = #{obj1, mate1}))
+    epl.creditos(8)
+
+    alex.inscribirEn(programacion)
+    andy.inscribirEn(programacion)
+    luisa.inscribirEn(programacion)
+    romina.inscribirEn(programacion)
+    alicia.inscribirEn(programacion)
+    ana.inscribirEn(programacion)
+
+    alex.registrarCursada(mate1, 8)
+    alex.registrarCursada(obj1, 10)
+    andy.registrarCursada(mate1, 10)
+    andy.registrarCursada(obj1, 10)
+    luisa.registrarCursada(mate1, 7)
+    luisa.registrarCursada(obj1, 8)
+    romina.registrarCursada(mate1, 6)
+    romina.registrarCursada(obj1, 6)
+    alicia.registrarCursada(mate1, 9)
+    alicia.registrarCursada(obj1, 10)
+    alicia.registrarCursada(epl, 6)
+    ana.registrarCursada(obj1, 10)
+  }
+
+  test "respeta el cupo, el orden de espera y promueve al primero al dar de baja" {
+    alex.inscribirseA(obj2)
+    assert.equals(#{alex}, obj2.inscriptos())
+    assert.equals([], obj2.listaEspera())
+
+    luisa.inscribirseA(obj2)
+    romina.inscribirseA(obj2)
+
+    assert.equals(#{alex, luisa}, obj2.inscriptos())
+    assert.equals([romina], obj2.listaEspera())
+
+    assert.throwsException({ ana.inscribirseA(obj2) })
+    assert.equals([romina], obj2.listaEspera())
+
+    andy.inscribirseA(obj2)
+    alicia.inscribirseA(obj2)
+
+    assert.equals(#{alex, luisa}, obj2.inscriptos())
+    assert.equals([romina, andy, alicia], obj2.listaEspera())
+    assert.equals([obj2], alex.materiasInscripto())
+    assert.equals([], alex.materiasEnListaDeEspera())
+    assert.equals([], andy.materiasInscripto())
+    assert.equals([obj2], andy.materiasEnListaDeEspera())
+
+    luisa.darseDeBajaDe(obj2)
+
+    assert.equals(#{alex, romina}, obj2.inscriptos())
+    assert.equals([andy, alicia], obj2.listaEspera())
+    assert.equals([], luisa.materiasInscripto())
+    assert.equals([], romina.materiasEnListaDeEspera())
+  }
+
+  test "no permite inscribir dos veces a una persona en espera" {
+    alex.inscribirseA(obj2)
+    luisa.inscribirseA(obj2)
+    romina.inscribirseA(obj2)
+
+    assert.throwsException({ romina.inscribirseA(obj2) })
+    assert.equals([romina], obj2.listaEspera())
+  }
+}
